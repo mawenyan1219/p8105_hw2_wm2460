@@ -1,0 +1,12 @@
+---
+title: "p8105_hw2_wm2460"
+author: "Wenyan Ma"
+date: "2022-09-28"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
