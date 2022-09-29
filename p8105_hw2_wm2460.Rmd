@@ -7,6 +7,69 @@ output: github_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
 ```
+
+
+## Problem 1: NYC Transit data
+
+### Importing and tidying in data
+```{r q1_import_tidy}
+nytransit_df = 
+  read_csv("./HW2_Data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>%
+  janitor::clean_names() %>% 
+  select(line, starts_with('station'), starts_with('route'), entry, entrance_type, vending, ada, -station_location) %>%
+  mutate(entry = ifelse(entry == "YES", TRUE, FALSE))
+```
+
+### Short paragraph about the data
+
+The cleaned NY transit data include variables like `r names(nytransit_df)`
+
+After import the .csv file, my data cleaning processes include general cleaning of the variable names, selecting necessary variables into the data frame, and changing variable types.
+
+The dimension of the cleaned NY transit data frame is `r dim(nytransit_df)`
+
+### Answer the questions
+
+*   How many distinct stations are there? 
+    * There are `r nrow(distinct(nytransit_df, line, station_name))` distinct stations.
+
+```{r}
+nrow(distinct(nytransit_df, line, station_name))
+```
+
+*   How many stations are ADA compliant?
+    * There are `r nrow(filter(nytransit_df, ada == TRUE))` stations that are ADA compliant.
+  
+```{r}
+nrow(filter(nytransit_df, ada == TRUE))
+```
+
+*   What proportion of station entrances / exits without vending allow entrance? 
+    * The proportion of station entrances / exists without vending allow entrance is 0.377.
+    
+```{r proportion_calculation}
+#number of observations with no vending:
+no_vending =
+  nrow(filter(nytransit_df, vending == 'NO'))
+no_vending
+
+#number of observations with entry but no vending: 
+entry_true = 
+  nrow(filter(nytransit_df, vending == 'NO', entry == 'TRUE'))
+entry_true
+
+#proportion of station entrances / exits without vending allow entrance
+proportion = entry_true/no_vending 
+proportion
+
+```
+
+
+
+  
+  
+## Problem 2
 
 
