@@ -17,7 +17,9 @@ library(readxl)
 #### Importing and tidying in data
 ```{r q1_import_tidy}
 nytransit_df = 
-  read_csv("./HW2_Data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>%
+  read_csv(
+    "./HW2_Data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv",
+    col_types = cols(Route8 = "c", Route9 = "c", Route10 = "c", Route11 = "c")) %>% 
   janitor::clean_names() %>% 
   select(line, starts_with('station'), starts_with('route'), entry, entrance_type, vending, ada, -station_location) %>%
   mutate(entry = ifelse(entry == "YES", TRUE, FALSE))
@@ -70,11 +72,27 @@ proportion
 
 #### Reformat route name and route number
 ```{r }
+nytransit_df %>% 
+  pivot_longer(
+    route1:route11,
+    names_to = "route_num",
+    values_to = "route") %>% 
+  filter(route == "A") %>% 
+  select(station_name, line) %>% 
+  distinct
 
+nytransit_df %>% 
+  pivot_longer(
+    route1:route11,
+    names_to = "route_num",
+    values_to = "route") %>% 
+  filter(route == "A", ada == TRUE) %>% 
+  select(station_name, line) %>% 
+  distinct
 ```
   
   
-## Problem 2
+## Problem 2: Trash Wheel
 
 #### Read and clean the Mr. Trash Wheel sheet
 
@@ -119,12 +137,19 @@ join_trash_df =
     The total number of sports balls collected by Mr. Trash Wheel in 2020 is `r mrtrash_df %>% filter(year == 2020) %>% pull(sports_balls) %>% sum`.
 
 
-## Problem 3
+## Problem 3: FiveThirtyEight
 
 #### Clean pols-month.csv
 ```{r}
 pols_month = 
-  read_csv("./HW2_Data/fivethirtyeight_datasets/pols-month.csv")
+  read_csv("./HW2_Data/fivethirtyeight_datasets/pols-month.csv") %>% 
+  janitor::clean_names() %>%
+  separate(mon, into = c("year", "month", "day"), convert = TRUE) %>% 
+  mutate(month = month.name[month]) %>% #only get NA for month name#
+  mutate(president = case_when(prez_dem == "1" ~ "dem", 
+                               prez_gop == "1" ~ "gop")) %>% 
+  select(-day, -prez_dem, -prez_gop)
+  
 ```
 
 
