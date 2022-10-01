@@ -8,12 +8,13 @@ output: github_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(readxl)
 ```
 
 
 ## Problem 1: NYC Transit data
 
-### Importing and tidying in data
+#### Importing and tidying in data
 ```{r q1_import_tidy}
 nytransit_df = 
   read_csv("./HW2_Data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>%
@@ -22,7 +23,7 @@ nytransit_df =
   mutate(entry = ifelse(entry == "YES", TRUE, FALSE))
 ```
 
-### Short paragraph about the data
+#### Short paragraph about the data
 
 The cleaned NY transit data include variables like `r names(nytransit_df)`
 
@@ -30,7 +31,7 @@ After import the .csv file, my data cleaning processes include general cleaning 
 
 The dimension of the cleaned NY transit data frame is `r dim(nytransit_df)`
 
-### Answer the questions
+#### Answer the questions
 
 *   How many distinct stations are there? 
     * There are `r nrow(distinct(nytransit_df, line, station_name))` distinct stations.
@@ -67,9 +68,63 @@ proportion
 ```
 
 
+#### Reformat route name and route number
+```{r }
 
+```
   
   
 ## Problem 2
+
+#### Read and clean the Mr. Trash Wheel sheet
+
+```{r mr_trash_wheel}
+mrtrash_df = 
+  read_excel("./HW2_Data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx",
+  sheet = "Mr. Trash Wheel",
+  range = "A2:N535") %>% 
+  janitor::clean_names() %>% 
+  na.omit() %>% 
+  mutate(sports_balls = round(sports_balls), 
+         sports_balls = as.integer(sports_balls))
+```
+
+#### Read and clean the Professor Trash Wheel sheet
+
+```{r prof_trash_wheel}
+proftrash_df = 
+  read_excel("./HW2_Data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx",
+  sheet = "Professor Trash Wheel",
+  range = "A2:N117") %>% 
+  janitor::clean_names() %>% 
+  na.omit() %>% 
+  mutate(sports_balls = round(sports_balls), 
+         sports_balls = as.integer(sports_balls))
+```
+
+
+#### Combine the two 
+```{r combine}
+mrtrash_df$dumpster = as.numeric(mrtrash_df$dumpster)
+
+join_trash_df = 
+  full_join(mrtrash_df, proftrash_df, by = "dumpster", 
+            suffix = c(".Mr", ".PR"))
+```
+
+#### Description of the joined dataset
+    The joined dataset combined the "Mr. Trash Wheel" and "Professor Trash Wheel" sheets. There are `r nrow(join_trash_df)` observations and `r ncol(join_trash_df)` variables in the joined dataset. 
+    Some key variables include `weight_tons`, `volume_cubic_yards`, and `date`. 
+    The total weight of trash collected by Professor Trash Wheel is `r proftrash_df %>% pull(weight_tons) %>% sum` tons.
+    The total number of sports balls collected by Mr. Trash Wheel in 2020 is `r mrtrash_df %>% filter(year == 2020) %>% pull(sports_balls) %>% sum`.
+
+
+## Problem 3
+
+#### Clean pols-month.csv
+```{r}
+pols_month = 
+  read_csv("./HW2_Data/fivethirtyeight_datasets/pols-month.csv")
+```
 
 
