@@ -98,9 +98,9 @@ nytransit_df %>%
 
 ```{r mr_trash_wheel}
 mrtrash_df = 
-  read_excel("./HW2_Data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx",
+  read_excel("./HW2_Data/Trash Wheel Collection Data.xlsx",
   sheet = "Mr. Trash Wheel",
-  range = "A2:N535") %>% 
+  range = "A2:N549") %>% 
   janitor::clean_names() %>% 
   na.omit() %>% 
   mutate(sports_balls = round(sports_balls), 
@@ -111,19 +111,19 @@ mrtrash_df =
 
 ```{r prof_trash_wheel}
 proftrash_df = 
-  read_excel("./HW2_Data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx",
+  read_excel("./HW2_Data/Trash Wheel Collection Data.xlsx",
   sheet = "Professor Trash Wheel",
-  range = "A2:N117") %>% 
+  range = "A2:M96") %>% 
   janitor::clean_names() %>% 
-  na.omit() %>% 
-  mutate(sports_balls = round(sports_balls), 
-         sports_balls = as.integer(sports_balls))
+  na.omit() 
 ```
 
 
 #### Combine the two 
 ```{r combine}
 mrtrash_df$dumpster = as.numeric(mrtrash_df$dumpster)
+mrtrash_df$year = as.numeric(mrtrash_df$year)
+
 
 # Add a variable for each dataset to distinguish the original dataset name
 mrtrash_df$dataset = "Mr"
@@ -168,10 +168,11 @@ snp =
   read_csv("./HW2_Data/fivethirtyeight_datasets/snp.csv") %>% 
   janitor::clean_names() %>% 
   mutate(date = lubridate::mdy(date)) %>% 
-  separate(date, into = c("year","month", "day"), convert = TRUE) %>%      mutate(month = as.integer(month),
-        month = month.name[month],
-        year = as.integer(year),
-        day = as.integer(day)) %>% 
+  separate(date, into = c("year","month", "day"), convert = TRUE) %>%
+  mutate(month = as.integer(month),
+         month = month.name[month],
+         year = as.integer(year),
+         day = as.integer(day)) %>% 
   select(-day) %>% 
   arrange(year, month) %>% 
   relocate(year, month, close)
