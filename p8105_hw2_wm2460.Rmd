@@ -174,7 +174,7 @@ snp =
          month = month.name[month],
          year = as.integer(year),
          day = as.integer(day)) %>% 
-   select(-day) %>% 
+  select(-day) %>% 
   arrange(year, month) %>% 
   relocate(year, month, close)
 ```
@@ -216,9 +216,11 @@ join =
 
 #### Description about the dataset
 
-  In the `pols_month` dataset, there are `r nrow(pols_month)` observations and `r ncol(pols_month)` variables. 
-  In the `snp` dataset, there are `r nrow(snp)` observations and `r ncol(snp)` variables.
-  In the `unemployment` dataset, there are `r nrow(unemployment)` observations and `r ncol(unemployment)` variables.
+  In the `pols_month` dataset, there are `r nrow(pols_month)` observations and `r ncol(pols_month)` variables. The variables in this dataset include `r colnames(pols_month)`.
+  
+  In the `snp` dataset, there are `r nrow(snp)` observations and `r ncol(snp)` variables. The variables in this dataset include `r colnames(snp)`.
+  
+  In the `unemployment` dataset, there are `r nrow(unemployment)` observations and `r ncol(unemployment)` variables. The variables in this dataset include `r colnames(unemployment)`.
 
   The resulting dataset, `join`, contains `r nrow(join)` observations and `r ncol(join)` variables. The dimension of the resulting dataset is `r dim(join)`. The range of years is between `r min(join$year)` and `r max(join$year)`. Some key variables in the dataset include `president`, `unemployment_rate`, and `close`. 
 
