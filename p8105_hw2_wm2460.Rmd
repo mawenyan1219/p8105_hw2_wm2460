@@ -71,7 +71,7 @@ proportion
 
 
 #### Reformat route name and route number
-```{r }
+```{r}
 nytransit_df %>% 
   pivot_longer(
     route1:route11,
@@ -102,7 +102,6 @@ mrtrash_df =
   sheet = "Mr. Trash Wheel",
   range = "A2:N549") %>% 
   janitor::clean_names() %>% 
-  na.omit() %>% 
   mutate(sports_balls = round(sports_balls), 
          sports_balls = as.integer(sports_balls))
 ```
@@ -114,8 +113,7 @@ proftrash_df =
   read_excel("./HW2_Data/Trash Wheel Collection Data.xlsx",
   sheet = "Professor Trash Wheel",
   range = "A2:M96") %>% 
-  janitor::clean_names() %>% 
-  na.omit() 
+  janitor::clean_names() 
 ```
 
 
@@ -129,19 +127,22 @@ mrtrash_df$year = as.numeric(mrtrash_df$year)
 mrtrash_df$dataset = "Mr"
 proftrash_df$dataset = "Prof"
 
+bind_rows(mrtrash_df, proftrash_df)
+
 #Combine the two
 join_trash_df = 
   full_join(mrtrash_df, proftrash_df)
 ```
 
 #### Description of the joined dataset
-    The joined dataset combined the "Mr. Trash Wheel" and "Professor Trash Wheel" sheets. 
-    There are `r nrow(join_trash_df)` observations and `r ncol(join_trash_df)` variables in the joined dataset. 
-    Some key variables include `weight_tons`, `volume_cubic_yards`, and `date`. 
-    The total weight of trash collected by Professor Trash Wheel is `r proftrash_df %>% pull(weight_tons) %>% sum` tons.
-    The total number of sports balls collected by Mr. Trash Wheel in 2020 is `r mrtrash_df %>% filter(year == 2020) %>% pull(sports_balls) %>% sum`.
 
-
+  The joined dataset combined the "Mr. Trash Wheel" and "Professor Trash Wheel" sheets. 
+  There are `r nrow(join_trash_df)` observations and `r ncol(join_trash_df)` variables in the joined dataset. 
+  Some key variables include `weight_tons`, `volume_cubic_yards`, and `date`. 
+  The total weight of trash collected by Professor Trash Wheel is `r proftrash_df %>% pull(weight_tons) %>% sum` tons.
+  The total number of sports balls collected by Mr. Trash Wheel in 2020 is `r mrtrash_df %>% filter(year == 2020) %>% pull(sports_balls) %>% sum`.
+    
+    
 ## Problem 3: FiveThirtyEight
 
 #### Clean pols-month.csv
@@ -173,7 +174,6 @@ snp =
          month = month.name[month],
          year = as.integer(year),
          day = as.integer(day)) %>% 
-  select(-day) %>% 
   arrange(year, month) %>% 
   relocate(year, month, close)
 ```
@@ -215,9 +215,12 @@ join =
 
 #### Description about the dataset
 
-In the `pols_month` dataset, there are `r nrow(pols_month)` observations and `r ncol(pols_month)` variables. 
-In the `snp` dataset, there are `r nrow(snp)` observations and `r ncol(snp)` variables.
-The resulting dataset, `join`, contains `r nrow(join)` observations and `r ncol(join)` variables. The dimension of the resulting dataset is `r dim(join)`. The range of years is between `r min(join$year)` and `r max(join$year)`. The variables in the dataset include `president`, `unemployment_rate`, and `close`. 
+  In the `pols_month` dataset, there are `r nrow(pols_month)` observations and `r ncol(pols_month)` variables. 
+  In the `snp` dataset, there are `r nrow(snp)` observations and `r ncol(snp)` variables.
+  In the `unemployment` dataset, there are `r nrow(unemployment)` observations and `r ncol(unemployment)` variables.
+
+  The resulting dataset, `join`, contains `r nrow(join)` observations and `r ncol(join)` variables. The dimension of the resulting dataset is `r dim(join)`. The range of years is between `r min(join$year)` and `r max(join$year)`. Some key variables in the dataset include `president`, `unemployment_rate`, and `close`. 
+
 
 
 #### End of HW2
