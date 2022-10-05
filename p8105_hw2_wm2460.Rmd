@@ -102,6 +102,7 @@ mrtrash_df =
   sheet = "Mr. Trash Wheel",
   range = "A2:N549") %>% 
   janitor::clean_names() %>% 
+  drop_na(dumpster) %>% 
   mutate(sports_balls = round(sports_balls), 
          sports_balls = as.integer(sports_balls))
 ```
@@ -111,9 +112,9 @@ mrtrash_df =
 ```{r prof_trash_wheel}
 proftrash_df = 
   read_excel("./HW2_Data/Trash Wheel Collection Data.xlsx",
-  sheet = "Professor Trash Wheel",
-  range = "A2:M96") %>% 
-  janitor::clean_names() 
+  sheet = "Professor Trash Wheel", range = "A2:M96") %>% 
+  janitor::clean_names() %>% 
+  drop_na(dumpster)
 ```
 
 
@@ -126,8 +127,6 @@ mrtrash_df$year = as.numeric(mrtrash_df$year)
 # Add a variable for each dataset to distinguish the original dataset name
 mrtrash_df$dataset = "Mr"
 proftrash_df$dataset = "Prof"
-
-bind_rows(mrtrash_df, proftrash_df)
 
 #Combine the two
 join_trash_df = 
@@ -162,6 +161,7 @@ pols_month =
   
 ```
 
+For the variable `prez_gop`, it should only take on value of 1 or 0. However, there are some 2s in the dataset. So, this is a quick note to indicate this discrepency. 
 
 #### Clean snp.csv
 ```{r snp}
@@ -202,8 +202,7 @@ unemployment =
                    sep = "September",
                    oct = "October",
                    nov = "November",
-                   dec = "December")) %>% 
-  na.omit()
+                   dec = "December")) 
 ```
 
 #### Merging
@@ -223,6 +222,7 @@ join =
   In the `unemployment` dataset, there are `r nrow(unemployment)` observations and `r ncol(unemployment)` variables. The variables in this dataset include `r colnames(unemployment)`.
 
   The resulting dataset, `join`, contains `r nrow(join)` observations and `r ncol(join)` variables. The dimension of the resulting dataset is `r dim(join)`. The range of years is between `r min(join$year)` and `r max(join$year)`. Some key variables in the dataset include `president`, `unemployment_rate`, and `close`. 
+
 
 
 
